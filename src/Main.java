@@ -16,16 +16,67 @@ public class Main {
     private static void partTwo() throws Throwable {
         Scanner infile = new Scanner(new File("test.dat"));
 
+        String[] lines = new String[8];
+        for(int x=0; x<8; x++)
+            lines[x] = infile.nextLine();
+
+        Stack[] tower = new Stack[9];
+        for(int x = 0; x < 9; x++)
+            tower[x] = new Stack<String>();
+
+        for(int x = 7; x>=0; x--){
 
 
-        long totalScore = 0L;
-        while(infile.hasNext()){
-            String next = infile.nextLine();
+            char[] pieces = lines[x].toCharArray();
 
+            ArrayList<Character> toPush = new ArrayList<>();
+            for(int z = 1; z<pieces.length; z+=4){
+                toPush.add(pieces[z]);
+            }
 
+            int y = 0;
+            for(int z = 0; z<toPush.size(); z++){
+
+                String pkg = "" + toPush.get(z);
+                if(!pkg.equals(" ")) {
+                    tower[y++].push(pkg);
+
+                }
+                else {
+                    y++;
+                }
+            }
         }
 
-        out.println(totalScore);
+
+        infile.nextLine();
+        infile.nextLine();
+        while(infile.hasNext()){
+            String next = infile.nextLine();
+            Scanner parser = new Scanner(next);
+            parser.next();
+            int amt = parser.nextInt();
+            parser.next();
+            int from = parser.nextInt()-1;
+            parser.next();
+            int to = parser.nextInt()-1;
+            out.println("move "+amt + " from "+from+" to "+to);
+            Stack<String> temp = new Stack<>();
+            for(int i = 0; i < amt; i++){
+                if(!tower[from].isEmpty())
+                    tower[to].push(tower[from].pop());
+            }
+
+        }
+        String answer = "";
+        for(int x = 0; x < tower.length; x++) {
+            out.println(tower[x]);
+            if (!tower[x].isEmpty())
+                answer = answer + tower[x].peek();
+
+        }
+        out.println(answer);
+
     }
 
     private static void partOne() throws Throwable {
@@ -42,35 +93,29 @@ public class Main {
             tower[x] = new Stack<String>();
 
         for(int x = 7; x>=0; x--){
-            Scanner linebreaker = new Scanner(lines[x]);
-            linebreaker.useDelimiter("");
-            String line = "";
-            while(linebreaker.hasNext()){
-                String part = linebreaker.next();
-                if(!part.equals("[")&&!part.equals("]"))
-                    line=line+part;
+
+
+            char[] pieces = lines[x].toCharArray();
+
+            ArrayList<Character> toPush = new ArrayList<>();
+            for(int z = 1; z<pieces.length; z+=4){
+                toPush.add(pieces[z]);
             }
-            linebreaker = new Scanner(line+" ");
-            out.println("processed line: " + line);
-            linebreaker.useDelimiter(" ");
+
             int y = 0;
-            while(linebreaker.hasNext()){
-                String pkg = linebreaker.next();
-                out.println("current item to push: " + pkg);
-                if(!pkg.equals(" ")) {
-                    if(!pkg.equals(""))
-                       tower[y].push(pkg);
-                    out.println(pkg + " added to tower " + y);
-//                    linebreaker.next();
+            for(int z = 0; z<toPush.size(); z++){
+
+                String pkg = "" + toPush.get(z);
+                 if(!pkg.equals(" ")) {
+                        tower[y++].push(pkg);
+
+                }
+                else {
                     y++;
                 }
-
-                                if(linebreaker.hasNext())
-                    linebreaker.next();
             }
         }
-        for(int x = 0; x < tower.length; x++)
-            out.println(tower[x]);
+
 
         infile.nextLine();
         infile.nextLine();
@@ -84,13 +129,11 @@ public class Main {
             parser.next();
             int to = parser.nextInt()-1;
             out.println("move "+amt + " from "+from+" to "+to);
+
             for(int i = 0; i < amt; i++){
                 if(!tower[from].isEmpty())
                     tower[to].push(tower[from].pop());
             }
-            for(int x = 0; x < tower.length; x++)
-                out.println(tower[x]);
-
 
         }
         String answer = "";
