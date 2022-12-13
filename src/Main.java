@@ -64,7 +64,11 @@ public class Main {
             Stack<String> temp = new Stack<>();
             for(int i = 0; i < amt; i++){
                 if(!tower[from].isEmpty())
-                    tower[to].push(tower[from].pop());
+                    temp.push((String) tower[from].pop());
+            }
+            for(int i = 0; i < amt; i++){
+                if(!temp.isEmpty())
+                    tower[to].push(temp.pop());
             }
 
         }
